@@ -6,4 +6,6 @@ from django.http import HttpResponse
 # function. It takes the request as its first parameter and the name of the
 # template to render.
 def home_page(request):
-    return render(request, 'home.html')
+    return render(request, 'home.html', {
+        'new_item_text': request.POST.get('item_text', ''),
+    })
