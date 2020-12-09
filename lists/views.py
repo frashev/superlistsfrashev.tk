@@ -7,12 +7,14 @@ from lists.models import Item
 # function. It takes the request as its first parameter and the name of the
 # template to render.
 def home_page(request):
-    if request.method == 'POST':
-        Item.objects.create(text=request.POST['item_text'])
-        return redirect('/lists/the-only-list-in-the-world/')
-
     return render(request, 'home.html')
 
+# view_list display items to the screen
 def view_list(request):
     items = Item.objects.all()
     return render(request, 'list.html', {'items': items})
+
+# new_list creates a new item
+def new_list(request):
+    Item.objects.create(text=request.POST['item_text'])
+    return redirect('/lists/the-only-list-in-the-world/')
