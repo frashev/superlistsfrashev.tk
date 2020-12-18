@@ -20,7 +20,8 @@ def view_list(request, list_id):
             item = Item(text=request.POST['item_text'], list=list_)
             item.full_clean()
             item.save()
-            return redirect(f'/lists/{list_.id}/')
+            # redirect(list_) gets the url of the object's ID passed
+            return redirect(list_)
         except ValidationError:
             error = "You can't have an empty list item"
 
@@ -37,4 +38,6 @@ def new_list(request):
         list_.delete()
         error = "You can't have an empty list item"
         return render(request, 'home.html', {"error": error})
-    return redirect(f'/lists/{list_.id}/')
+    # takes the object we want to redirect to, and it uses get_absolute_url
+    # in object definitions in models.py
+    return redirect(list_)
