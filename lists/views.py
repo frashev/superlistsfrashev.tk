@@ -9,7 +9,7 @@ from django.core.exceptions import ValidationError
 # function. It takes the request as its first parameter and the name of the
 # template to render.
 def home_page(request):
-    return render(request, 'home.html', {'form': ItemForm})
+    return render(request, 'home.html', {'form': ItemForm()})
 
 def view_list(request, list_id):
     list_ = List.objects.get(id=list_id)
@@ -18,7 +18,7 @@ def view_list(request, list_id):
     if request.method == 'POST':
         # Make some validation
         try:
-            item = Item(text=request.POST['item_text'], list=list_)
+            item = Item(text=request.POST['text'], list=list_)
             item.full_clean()
             item.save()
             # redirect(list_) gets the url of the object's ID passed
@@ -31,7 +31,7 @@ def view_list(request, list_id):
 # new_list creates a new item
 def new_list(request):
     list_ = List.objects.create()
-    item = Item.objects.create(text=request.POST['item_text'], list=list_)
+    item = Item.objects.create(text=request.POST['text'], list=list_)
     try:
         item.full_clean()
         item.save()

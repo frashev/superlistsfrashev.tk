@@ -40,6 +40,10 @@ class FunctionalTest(StaticLiveServerTestCase):
                     raise e
                 time.sleep(0.5)
 
+
+    def get_item_input_box(self):
+        return self.browser.find_element_by_id('id_text')
+
 # These lines check whether the Python script has been executed
 # from the command line or just imported by another script.
 # We call unittest.main(), which launches the unittest test runner
