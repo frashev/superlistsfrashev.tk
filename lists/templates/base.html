@@ -1,72 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
 
-    <head>
-        <meta charset="utf8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>To-Do lists</title>
-        <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-        <link href="/static/bootstrap/base.css" rel="stylesheet">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>To-Do lists</title>
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/bootstrap/base.css" rel="stylesheet">
+  </head>
 
-    </head>
+  <body>
+    <div class="container">
 
-    <body>
-        <div class="container">
-
-            <div class="container">
-
-                <nav class="navbar navbar-default" role="navigation">
-                    <div class="container-fluid">
-                        <a class="navbar-brand" href="/">Superlists</a>
-                        <form class="navbar-form navbar-right" method="POST" action="#">
-                            <span>Enter email to log in:</span>
-                            <input class="form-control" name="email" type="text" />
-                            {% csrf_token %}
-                        </form>
-                    </div>
-                </nav>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6 col-md-offset-3 jumbotron">
-                    <div class="text-center">
-                        <h1>{% block header_text %}{% endblock %}</h1>
-                        <form method="POST" action="{% block form_action %}{% endblock %}">
-                            {{ form.text }}
-                            {% csrf_token %}
-                            {% if form.errors  %}
-			    	            <div class="form-group has-error">
-                                    <span class="help-block">{{ form.text.errors }}</span>
-                                </div>
-			                {% endif %}
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-md-6 col-md-offset-3">
-                    {% block table %}
-                    {% endblock %}
-                </div>
-            </div>
-
+      <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="/">Superlists</a>
+          {% if user.email %}
+            <ul class="nav navbar-nav navbar-right">
+              <li class="navbar-text">Logged in as {{ user.email }}</li>
+              <li><a href="{% url 'logout' %}">Log out</a></li>
+            </ul>
+          {% else %}
+            <form class="navbar-form navbar-right"
+                  method="POST"
+                  action="{% url 'send_login_email' %}">
+              <span>Enter email to log in:</span>
+              <input class="form-control" name="email" type="text" />
+              {% csrf_token %}
+            </form>
+          {% endif %}
         </div>
+      </nav>
 
-        <script src="/static/jquery-3.5.1.js"></script>
-        <script src="/static/list.js"></script>
+      {% if messages %}
+        <div class="row">
+          <div class="col-md-8">
+            {% for message in messages %}
+              {% if message.level_tag == 'success' %}
+                <div class="alert alert-success">{{ message }}</div>
+              {% else %}
+                <div class="alert alert-warning">{{ message }}</div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
 
+      <div class="row">
+        <div class="col-md-6 col-md-offset-3 jumbotron">
+          <div class="text-center">
+            <h1>{% block header_text %}{% endblock %}</h1>
+            <form method="POST" action="{% block form_action %}{% endblock %}">
+              {{ form.text }}
+              {% csrf_token %}
+              {% if form.errors %}
+                <div class="form-group has-error">
+                  <div class="help-block">{{ form.text.errors }}</div>
+                </div>
+              {% endif %}
+            </form>
+          </div>
+        </div>
+      </div>
 
-        <script>
+      <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+          {% block table %}
+          {% endblock %}
+        </div>
+      </div>
 
-            $(document).ready(function () {
-                window.Superlists.initialize();
-            });
+    </div>
+    <script src="/static/jquery-3.5.1.min.js"></script>
+    <script src="/static/list.js"></script>
 
-        </script>
+    <script>
 
+$(document).ready(function () {
+  window.Superlists.initialize();
+});
 
-    </body>
+    </script>
 
+  </body>
 </html>
